@@ -1,0 +1,25 @@
+---
+# This manifest provides the ippool for calico-node
+apiVersion: crd.projectcalico.org/v1
+kind: IPPool
+metadata:
+  name: default-ipv4-ippool
+spec:
+  blockSize: 26
+  natOutgoing: true
+  cidr: {{ .Values.global.podCIDR }}
+  {{- if eq .Values.config.ipv4.pool "vxlan" }}
+  vxlanMode: {{ .Values.config.ipv4.mode }}
+  {{- else}}
+  vxlanMode: Never
+  {{- end }}
+  {{- if eq .Values.config.ipv4.pool "ipip" }}
+  ipipMode: {{ .Values.config.ipv4.mode }}
+  {{- else}}
+  ipipMode: Never
+  {{- end }}
+  {{- if .Values.nodeSelector }}
+  nodeSelector: all()
+  {{- else}}
+  nodeSelector: {{ .Values.nodeSelector }}
+  {{- end }}

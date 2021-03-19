@@ -1,0 +1,15 @@
+---
+# This manifest provides the felixconfiguration for calico-node
+apiVersion: crd.projectcalico.org/v1
+kind: FelixConfiguration
+metadata:
+  name: default
+spec:
+  logSeverityScreen: Info
+  reportingInterval: 0s
+  {{- if and (eq .Values.config.ipv4.pool "vlan" | lower) (eq .Values.config.ipv4.mode "always") }}
+  vxlanEnabled: true
+  {{- end }}
+  {{- if and (eq .Values.config.ipv4.pool "ipip" | lower) (eq .Values.config.ipv4.mode "always") }}
+  ipipEnabled: true
+  {{- end }}
